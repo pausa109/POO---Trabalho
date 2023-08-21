@@ -7,6 +7,15 @@ from Vendas import Venda
 
 
 def cadastrar_cliente():
+    """
+    Cadastra um novo cliente na farmácia.
+
+    Solicita informações ao usuário (CPF, nome e data de nascimento) e cria um novo objeto Cliente.
+    O cliente cadastrado é adicionado à lista clientes_cadastrados.
+
+    Returns:
+        None
+    """
     cpf = input("CPF do cliente: ")
     nome = input("Nome do cliente: ")
     data_nascimento = input("Data de nascimento (YYYY-MM-DD): ")
@@ -15,6 +24,15 @@ def cadastrar_cliente():
     print("Cliente cadastrado com sucesso!")
 
 def buscar_cliente_por_cpf():
+    """
+    Busca um cliente pelo CPF.
+
+    Solicita o CPF ao usuário e busca na lista clientes_cadastrados pelo cliente correspondente.
+    Caso encontrado, exibe as informações do cliente.
+
+    Returns:
+        None
+    """
     cpf_busca = input("Digite o CPF do cliente: ")
     cliente_encontrado = next((cliente for cliente in clientes_cadastrados if cliente.cpf == cpf_busca), None)
     if cliente_encontrado:
@@ -27,6 +45,16 @@ def buscar_cliente_por_cpf():
 
 
 def cadastrar_medicamento():
+    """
+    Cadastra um novo medicamento na farmácia.
+
+    Solicita informações ao usuário (tipo de medicamento, nome, composto, laboratório e descrição)
+    e cria um novo objeto MedicamentoQuimioterapico ou MedicamentoFitoterapico.
+    O medicamento cadastrado é adicionado à lista medicamentos_quimioterapicos ou medicamentos_fitoterapicos.
+
+    Returns:
+        None
+    """
     print("Tipo de medicamento:")
     print("1 - Medicamento Quimioterápico")
     print("2 - Medicamento Fitoterápico")
@@ -50,6 +78,15 @@ def cadastrar_medicamento():
         print("Opção inválida para tipo de medicamento.")
 
 def buscar_medicamento():
+    """
+    Busca medicamentos por nome, fabricante ou descrição parcial.
+
+    Solicita ao usuário a opção de busca e um termo de busca.
+    Busca na lista de medicamentos por correspondências e exibe os resultados.
+
+    Returns:
+        None
+    """
     print("Opções de busca de medicamento:")
     print("1 - Por nome")
     print("2 - Por fabricante")
@@ -79,9 +116,66 @@ def buscar_medicamento():
 
 
 def realizar_venda():
-    pass
+    """
+    Realiza uma venda na farmácia.
+
+    Solicita o CPF do cliente, busca o cliente correspondente e inicia um objeto Venda.
+    Permite adicionar produtos à venda, calcular descontos e verificar receitas.
+    Ao final, confirma a venda ou cancela.
+
+    Returns:
+        None
+    """
+    cpf_cliente = input("Digite o CPF do cliente: ")
+    cliente_encontrado = next((cliente for cliente in clientes_cadastrados if cliente.cpf == cpf_cliente), None)
+
+    if cliente_encontrado:
+        print("Cliente encontrado:")
+        print(f"Nome: {cliente_encontrado.nome}")
+        print(f"CPF: {cliente_encontrado.cpf}")
+
+        venda = Venda(datetime.now(), cliente_encontrado)
+
+        while True:
+            produto_nome = input("Digite o nome do produto a ser vendido (ou 'fim' para encerrar a venda): ")
+            if produto_nome == "fim":
+                break
+
+            medicamento_encontrado = next((med for med in medicamentos_quimioterapicos + medicamentos_fitoterapicos if med.nome.lower() == produto_nome.lower()), None)
+            if medicamento_encontrado:
+                venda.adicionar_produto(medicamento_encontrado)
+                print(f"Produto {medicamento_encontrado.nome} adicionado à venda.")
+            else:
+                print("Produto não encontrado.")
+
+        venda.calcular_desconto()
+
+        alerta_receita = venda.verificar_receita()
+        if alerta_receita:
+            print(alerta_receita)
+
+        print(f"Valor total da venda: R${venda.valor_total:.2f}")
+
+        confirmacao = input("Deseja confirmar a venda? (S/N): ").lower()
+        if confirmacao == "s":
+            vendas_realizadas.append(venda)
+            print("Venda realizada e confirmada!")
+        else:
+            print("Venda cancelada.")
+
+    else:
+        print("Cliente não encontrado.")
+
 
 def emitir_relatorios():
+    """
+    Emite relatórios de clientes e medicamentos.
+
+    Exibe opções de relatórios, permitindo listar clientes, medicamentos ou tipos específicos de medicamentos.
+
+    Returns:
+        None
+    """
     opcao_relatorio = input("Escolha um relatório:\n"
                             "1 - Listagem de clientes em ordem alfabética\n"
                             "2 - Listagem de medicamentos em ordem alfabética\n"
@@ -111,6 +205,46 @@ def emitir_relatorios():
             print(med)
     else:
         print("Opção inválida para relatório.")
+
+def gerar_relatorio_estatisticas(vendas):
+    """
+    Gera um relatório de estatísticas.
+
+    Calcula e exibe estatísticas como o remédio mais vendido, quantidade de pessoas atendidas,
+    quantidade de remédios Quimioterápicos e Fitoterápicos vendidos, e valores totais.
+
+    Args:
+        vendas (list): Lista de objetos Venda.
+
+    Returns:
+        None
+    """
+    print("Relatório de Estatísticas:")
+    
+    # Remédio mais vendido
+    produtos_vendidos = [produto for venda in vendas for produto in venda.produtos]
+    remedio_mais_vendido = max(produtos_vendidos, key=lambda produto: produtos_vendidos.count(produto))
+    quantidade_mais_vendido = produtos_vendidos.count(remedio_mais_vendido)
+    valor_total_mais_vendido = quantidade_mais_vendido * remedio_mais_vendido.preco
+    print(f"Remédio mais vendido: {remedio_mais_vendido.nome}")
+    print(f"Quantidade vendida: {quantidade_mais_vendido}")
+    print(f"Valor total: R${valor_total_mais_vendido:.2f}")
+    
+    # Quantidade de pessoas atendidas
+    quantidade_pessoas_atendidas = len(set(venda.cliente for venda in vendas))
+    print(f"Quantidade de pessoas atendidas: {quantidade_pessoas_atendidas}")
+    
+    # Número de remédios Quimioterápicos vendidos
+    quantidade_quimioterapicos = sum(1 for venda in vendas for produto in venda.produtos if isinstance(produto, MedicamentoQuimioterapico))
+    valor_total_quimioterapicos = sum(produto.preco for venda in vendas for produto in venda.produtos if isinstance(produto, MedicamentoQuimioterapico))
+    print(f"Número de remédios Quimioterápicos vendidos: {quantidade_quimioterapicos}")
+    print(f"Valor total dos Quimioterápicos: R${valor_total_quimioterapicos:.2f}")
+    
+    # Número de remédios Fitoterápicos vendidos
+    quantidade_fitoterapicos = sum(1 for venda in vendas for produto in venda.produtos if isinstance(produto, MedicamentoFitoterapico))
+    valor_total_fitoterapicos = sum(produto.preco for venda in vendas for produto in venda.produtos if isinstance(produto, MedicamentoFitoterapico))
+    print(f"Número de remédios Fitoterápicos vendidos: {quantidade_fitoterapicos}")
+    print(f"Valor total dos Fitoterápicos: R${valor_total_fitoterapicos:.2f}")        
 
 
 # Inicialização de listas e dicionários
@@ -146,7 +280,8 @@ while True:
     elif opcao == "6":
         emitir_relatorios()
     elif opcao == "0":
-        print("Saindo do programa.")
+        print("Saindo do programa. Emitindo relatório de estatísticas:")
+        gerar_relatorio_estatisticas(vendas_realizadas)
         break
     else:
         print("Opção inválida. Escolha novamente.")
