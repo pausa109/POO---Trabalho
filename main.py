@@ -295,8 +295,8 @@ medicamentos_quimioterapicos = [
 ]
 
 medicamentos_fitoterapicos = [
-    MedicamentoFitoterapico("FitA", "ErvaA", "LabA", "Medicamento fitoterápico para relaxamento"),
-    MedicamentoFitoterapico("FitB", "ErvaB", "LabB", "Medicamento fitoterápico para alívio de stress")
+    MedicamentoFitoterapico("FitA", "ErvaA", "LabA", "Medicamento fitoterápico para relaxamento", 42.00),
+    MedicamentoFitoterapico("FitB", "ErvaB", "LabB", "Medicamento fitoterápico para alívio de stress", 57.50)
 ]
 
 laboratorios_cadastrados = [
