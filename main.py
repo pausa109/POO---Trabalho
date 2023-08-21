@@ -48,7 +48,7 @@ def cadastrar_medicamento():
     """
     Cadastra um novo medicamento na farmácia.
 
-    Solicita informações ao usuário (tipo de medicamento, nome, composto, laboratório e descrição)
+    Solicita informações ao usuário (tipo de medicamento, nome, composto, laboratório, descrição e preço)
     e cria um novo objeto MedicamentoQuimioterapico ou MedicamentoFitoterapico.
     O medicamento cadastrado é adicionado à lista medicamentos_quimioterapicos ou medicamentos_fitoterapicos.
 
@@ -62,20 +62,36 @@ def cadastrar_medicamento():
 
     nome = input("Nome do medicamento: ")
     principal_composto = input("Principal composto: ")
-    laboratorio = input("Laboratório: ")
+    
+    # Lista os laboratórios cadastrados
+    print("Laboratórios cadastrados:")
+    for i, lab in enumerate(laboratorios_cadastrados, start=1):
+        print(f"{i} - {lab.nome}")
+    
+    # Solicitação do laboratório ao usuário
+    lab_choice = int(input("Escolha o número do laboratório: "))
+    if lab_choice < 1 or lab_choice > len(laboratorios_cadastrados):
+        print("Escolha inválida para laboratório.")
+        return
+    
+    laboratorio = laboratorios_cadastrados[lab_choice - 1]
+    
     descricao = input("Descrição: ")
+    preco = float(input("Preço: "))  # Solicitação do preço ao usuário
 
     if tipo_medicamento == "1":
         necessita_receita = input("Necessita de receita? (S/N): ").lower() == "s"
-        medicamento = MedicamentoQuimioterapico(nome, principal_composto, laboratorio, descricao, necessita_receita)
+        medicamento = MedicamentoQuimioterapico(nome, principal_composto, laboratorio, descricao, necessita_receita, preco)  # Adiciona o preço ao criar o medicamento
         medicamentos_quimioterapicos.append(medicamento)
         print("Medicamento quimioterápico cadastrado com sucesso!")
     elif tipo_medicamento == "2":
-        medicamento = MedicamentoFitoterapico(nome, principal_composto, laboratorio, descricao)
+        medicamento = MedicamentoFitoterapico(nome, principal_composto, laboratorio, descricao, preco)  # Adiciona o preço ao criar o medicamento
         medicamentos_fitoterapicos.append(medicamento)
         print("Medicamento fitoterápico cadastrado com sucesso!")
     else:
         print("Opção inválida para tipo de medicamento.")
+
+
 
 def buscar_medicamento():
     """
@@ -112,6 +128,25 @@ def buscar_medicamento():
             print(med)
     else:
         print("Nenhum medicamento encontrado.")
+
+def cadastrar_laboratorio():
+    """
+    Cadastra um novo laboratório na farmácia.
+
+    Solicita informações ao usuário (nome, endereço, telefone, cidade, estado) e cria um novo objeto Laboratorio.
+    O laboratório cadastrado é adicionado à lista laboratorios_cadastrados.
+
+    Returns:
+        None
+    """
+    nome = input("Nome do laboratório: ")
+    endereco = input("Endereço do laboratório: ")
+    telefone = input("Telefone do laboratório: ")
+    cidade = input("Cidade do laboratório: ")
+    estado = input("Estado do laboratório: ")
+    laboratorio = Laboratorio(nome, endereco, telefone, cidade, estado)
+    laboratorios_cadastrados.append(laboratorio)
+    print("Laboratório cadastrado com sucesso!")
 
 
 
@@ -248,10 +283,26 @@ def gerar_relatorio_estatisticas(vendas):
 
 
 # Inicialização de listas e dicionários
-clientes_cadastrados = []
-medicamentos_quimioterapicos = []
-medicamentos_fitoterapicos = []
-laboratorios_cadastrados = []
+clientes_cadastrados = [
+    Cliente("123.456.789-01", "João da Silva", "1990-05-15"),
+    Cliente("987.654.321-01", "Maria Souza", "1985-10-25"),
+    Cliente("456.789.123-01", "Pedro Oliveira", "2000-02-10")
+]
+
+medicamentos_quimioterapicos = [
+    MedicamentoQuimioterapico("QuimioA", "CompostoA", "LabA", "Medicamento para tratamento de quimioterapia", True),
+    MedicamentoQuimioterapico("QuimioB", "CompostoB", "LabB", "Medicamento para tratamento de quimioterapia", True)
+]
+
+medicamentos_fitoterapicos = [
+    MedicamentoFitoterapico("FitA", "ErvaA", "LabA", "Medicamento fitoterápico para relaxamento"),
+    MedicamentoFitoterapico("FitB", "ErvaB", "LabB", "Medicamento fitoterápico para alívio de stress")
+]
+
+laboratorios_cadastrados = [
+    Laboratorio("LabA", "Endereço A", "Telefone A", "Cidade A", "Estado A"),
+    Laboratorio("LabB", "Endereço B", "Telefone B", "Cidade B", "Estado B"),
+]
 vendas_realizadas = []
 
 # Loop principal do programa
@@ -261,8 +312,9 @@ while True:
     print("2 - Buscar cliente por CPF")
     print("3 - Cadastrar medicamento")
     print("4 - Buscar medicamento")
-    print("5 - Realizar venda")
-    print("6 - Emitir relatórios")
+    print("5 - Cadastrar laboratório")
+    print("6 - Realizar venda")
+    print("7 - Emitir relatórios")
     print("0 - Sair")
     
     opcao = input("Escolha uma opção: ")
@@ -276,8 +328,10 @@ while True:
     elif opcao == "4":
         buscar_medicamento()
     elif opcao == "5":
-        realizar_venda()
+        cadastrar_laboratorio() 
     elif opcao == "6":
+        realizar_venda()
+    elif opcao == "7":
         emitir_relatorios()
     elif opcao == "0":
         print("Saindo do programa. Emitindo relatório de estatísticas:")

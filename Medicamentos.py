@@ -8,6 +8,7 @@ class MedicamentoQuimioterapico:
         _laboratorio (str): Laboratório que produz o medicamento.
         _descricao (str): Descrição do medicamento.
         _necessita_receita (bool): Indica se o medicamento necessita de receita.
+        _preco (float): Preço do medicamento.
 
     Métodos:
         nome (property): Getter e setter para o nome do medicamento.
@@ -15,15 +16,17 @@ class MedicamentoQuimioterapico:
         laboratorio (property): Getter e setter para o laboratório do medicamento.
         descricao (property): Getter e setter para a descrição do medicamento.
         necessita_receita (property): Getter e setter para a informação de necessidade de receita.
+        preco (property): Getter e setter para o preço do medicamento.
         __str__(): Retorna uma representação em string do medicamento.
     """
     
-    def __init__(self, nome, principal_composto, laboratorio, descricao, necessita_receita):
+    def __init__(self, nome, principal_composto, laboratorio, descricao, necessita_receita, preco):
         self._nome = nome
         self._principal_composto = principal_composto
         self._laboratorio = laboratorio
         self._descricao = descricao
         self._necessita_receita = necessita_receita
+        self._preco = preco
 
     def __str__(self):
         return f"Medicamento Quimioterápico: {self._nome} (Laboratório: {self._laboratorio})"
@@ -78,6 +81,16 @@ class MedicamentoQuimioterapico:
         """Setter para a informação de necessidade de receita."""
         self._necessita_receita = necessita
 
+    @property
+    def preco(self):
+        """Getter para o preço do medicamento."""
+        return self._preco
+    
+    @preco.setter
+    def preco(self, novo_preco):
+        """Setter para o preço do medicamento."""
+        self._preco = novo_preco        
+
 
 class MedicamentoFitoterapico:
     """
@@ -88,20 +101,24 @@ class MedicamentoFitoterapico:
         _principal_composto (str): Principal composto do medicamento.
         _laboratorio (str): Laboratório que produz o medicamento.
         _descricao (str): Descrição do medicamento.
+        _preco (float): Preço do medicamento.
 
     Métodos:
         nome (property): Getter e setter para o nome do medicamento.
         principal_composto (property): Getter e setter para o principal composto do medicamento.
         laboratorio (property): Getter e setter para o laboratório do medicamento.
         descricao (property): Getter e setter para a descrição do medicamento.
+        preco (property): Getter e setter para o preço do medicamento.
         __str__(): Retorna uma representação em string do medicamento.
     """
     
-    def __init__(self, nome, principal_composto, laboratorio, descricao):
+    def __init__(self, nome, principal_composto, laboratorio, descricao, preco):
         self._nome = nome
         self._principal_composto = principal_composto
         self._laboratorio = laboratorio
         self._descricao = descricao
+        self._preco = preco
+        
 
     def __str__(self):
         return f"Medicamento Fitoterápico: {self._nome} (Laboratório: {self._laboratorio})"
@@ -145,5 +162,15 @@ class MedicamentoFitoterapico:
     def descricao(self, nova_descricao):
         """Setter para a descrição do medicamento."""
         self._descricao = nova_descricao
+
+    @property
+    def preco(self):
+        """Getter para o preço do medicamento."""
+        return self._preco
+    
+    @preco.setter
+    def preco(self, novo_preco):
+        """Setter para o preço do medicamento."""
+        self._preco = novo_preco
 
 
