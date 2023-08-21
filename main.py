@@ -290,8 +290,8 @@ clientes_cadastrados = [
 ]
 
 medicamentos_quimioterapicos = [
-    MedicamentoQuimioterapico("QuimioA", "CompostoA", "LabA", "Medicamento para tratamento de quimioterapia", True),
-    MedicamentoQuimioterapico("QuimioB", "CompostoB", "LabB", "Medicamento para tratamento de quimioterapia", True)
+    MedicamentoQuimioterapico("QuimioA", "CompostoA", "LabA", "Medicamento para tratamento de quimioterapia", True, 100.0),
+    MedicamentoQuimioterapico("QuimioB", "CompostoB", "LabB", "Medicamento para tratamento de quimioterapia", True, 200.0)
 ]
 
 medicamentos_fitoterapicos = [
