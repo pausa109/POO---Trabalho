@@ -246,7 +246,7 @@ def gerar_relatorio_estatisticas(vendas):
     Gera um relatório de estatísticas.
 
     Calcula e exibe estatísticas como o remédio mais vendido, quantidade de pessoas atendidas,
-    quantidade de remédios Quimioterápicos e Fitoterápicos vendidos, e valores totais.
+    quantidade de remédios Quimioterápicos e Fitoterápicos vendidos, valores totais e valor total das vendas.
 
     Args:
         vendas (list): Lista de objetos Venda.
@@ -279,7 +279,12 @@ def gerar_relatorio_estatisticas(vendas):
     quantidade_fitoterapicos = sum(1 for venda in vendas for produto in venda.produtos if isinstance(produto, MedicamentoFitoterapico))
     valor_total_fitoterapicos = sum(produto.preco for venda in vendas for produto in venda.produtos if isinstance(produto, MedicamentoFitoterapico))
     print(f"Número de remédios Fitoterápicos vendidos: {quantidade_fitoterapicos}")
-    print(f"Valor total dos Fitoterápicos: R${valor_total_fitoterapicos:.2f}")        
+    print(f"Valor total dos Fitoterápicos: R${valor_total_fitoterapicos:.2f}")
+    
+    # Valor total das vendas
+    valor_total_vendas = sum(venda.valor_total for venda in vendas)
+    print(f"Valor total das vendas: R${valor_total_vendas:.2f}")
+   
 
 
 # Inicialização de listas e dicionários
