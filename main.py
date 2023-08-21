@@ -22,26 +22,32 @@ def cadastrar_cliente():
     cliente = Cliente(cpf, nome, data_nascimento)
     clientes_cadastrados.append(cliente)
     print("Cliente cadastrado com sucesso!")
+    print()
+
 
 def buscar_cliente_por_cpf():
     """
-    Busca um cliente pelo CPF.
+    Busca clientes pelo CPF.
 
-    Solicita o CPF ao usuário e busca na lista clientes_cadastrados pelo cliente correspondente.
-    Caso encontrado, exibe as informações do cliente.
+    Solicita parte do CPF ao usuário e busca na lista clientes_cadastrados pelos clientes correspondentes.
+    Caso encontrados, exibe as informações dos clientes.
 
     Returns:
         None
     """
-    cpf_busca = input("Digite o CPF do cliente: ")
-    cliente_encontrado = next((cliente for cliente in clientes_cadastrados if cliente.cpf == cpf_busca), None)
-    if cliente_encontrado:
-        print("Cliente encontrado:")
-        print(f"Nome: {cliente_encontrado.nome}")
-        print(f"CPF: {cliente_encontrado.cpf}")
-        print(f"Data de Nascimento: {Cliente.formatar_data(cliente_encontrado.data_nascimento)}")
+    cpf_busca = input("Digite parte do CPF do cliente: ")
+    
+    clientes_encontrados = [cliente for cliente in clientes_cadastrados if cpf_busca in cliente.cpf]
+    
+    if clientes_encontrados:
+        print("Clientes encontrados:")
+        for cliente_encontrado in clientes_encontrados:
+            print(f"Nome: {cliente_encontrado.nome}")
+            print(f"CPF: {cliente_encontrado.cpf}")
+            print(f"Data de Nascimento: {Cliente.formatar_data(cliente_encontrado.data_nascimento)}")
+            print()
     else:
-        print("Cliente não encontrado.")
+        print("Nenhum cliente encontrado.")
 
 
 def cadastrar_medicamento():
@@ -90,6 +96,7 @@ def cadastrar_medicamento():
         print("Medicamento fitoterápico cadastrado com sucesso!")
     else:
         print("Opção inválida para tipo de medicamento.")
+    print()
 
 
 
@@ -128,6 +135,8 @@ def buscar_medicamento():
             print(med)
     else:
         print("Nenhum medicamento encontrado.")
+    print()
+
 
 def cadastrar_laboratorio():
     """
@@ -147,6 +156,8 @@ def cadastrar_laboratorio():
     laboratorio = Laboratorio(nome, endereco, telefone, cidade, estado)
     laboratorios_cadastrados.append(laboratorio)
     print("Laboratório cadastrado com sucesso!")
+    print()
+
 
 
 
@@ -195,11 +206,17 @@ def realizar_venda():
         if confirmacao == "s":
             vendas_realizadas.append(venda)
             print("Venda realizada e confirmada!")
+            print()
+
         else:
             print("Venda cancelada.")
+            print()
+
 
     else:
         print("Cliente não encontrado.")
+        print()
+
 
 
 def emitir_relatorios():
@@ -223,23 +240,30 @@ def emitir_relatorios():
         print("Listagem de clientes em ordem alfabética:")
         for cliente in clientes_ordenados:
             print(cliente)
+        print()
     elif opcao_relatorio == "2":
         medicamentos_ordenados = sorted(medicamentos_quimioterapicos + medicamentos_fitoterapicos, key=lambda med: med.nome)
         print("Listagem de medicamentos em ordem alfabética:")
         for med in medicamentos_ordenados:
             print(med)
+        print()       
     elif opcao_relatorio == "3":
         medicamentos_quimio = [med for med in medicamentos_quimioterapicos if isinstance(med, MedicamentoQuimioterapico)]
         print("Listagem de medicamentos Quimioterápicos:")
         for med in medicamentos_quimio:
             print(med)
+        print()     
     elif opcao_relatorio == "4":
         medicamentos_fito = [med for med in medicamentos_fitoterapicos if isinstance(med, MedicamentoFitoterapico)]
         print("Listagem de medicamentos Fitoterápicos:")
         for med in medicamentos_fito:
             print(med)
+        print()
+
     else:
         print("Opção inválida para relatório.")
+    print()
+
 
 def gerar_relatorio_estatisticas(vendas):
     """
@@ -255,43 +279,47 @@ def gerar_relatorio_estatisticas(vendas):
         None
     """
     print("Relatório de Estatísticas:")
-    
-    # Remédio mais vendido
-    produtos_vendidos = [produto for venda in vendas for produto in venda.produtos]
-    remedio_mais_vendido = max(produtos_vendidos, key=lambda produto: produtos_vendidos.count(produto))
-    quantidade_mais_vendido = produtos_vendidos.count(remedio_mais_vendido)
-    valor_total_mais_vendido = quantidade_mais_vendido * remedio_mais_vendido.preco
-    print(f"Remédio mais vendido: {remedio_mais_vendido.nome}")
-    print(f"Quantidade vendida: {quantidade_mais_vendido}")
-    print(f"Valor total: R${valor_total_mais_vendido:.2f}")
-    
-    # Quantidade de pessoas atendidas
-    quantidade_pessoas_atendidas = len(set(venda.cliente for venda in vendas))
-    print(f"Quantidade de pessoas atendidas: {quantidade_pessoas_atendidas}")
-    
-    # Número de remédios Quimioterápicos vendidos
-    quantidade_quimioterapicos = sum(1 for venda in vendas for produto in venda.produtos if isinstance(produto, MedicamentoQuimioterapico))
-    valor_total_quimioterapicos = sum(produto.preco for venda in vendas for produto in venda.produtos if isinstance(produto, MedicamentoQuimioterapico))
-    print(f"Número de remédios Quimioterápicos vendidos: {quantidade_quimioterapicos}")
-    print(f"Valor total dos Quimioterápicos: R${valor_total_quimioterapicos:.2f}")
-    
-    # Número de remédios Fitoterápicos vendidos
-    quantidade_fitoterapicos = sum(1 for venda in vendas for produto in venda.produtos if isinstance(produto, MedicamentoFitoterapico))
-    valor_total_fitoterapicos = sum(produto.preco for venda in vendas for produto in venda.produtos if isinstance(produto, MedicamentoFitoterapico))
-    print(f"Número de remédios Fitoterápicos vendidos: {quantidade_fitoterapicos}")
-    print(f"Valor total dos Fitoterápicos: R${valor_total_fitoterapicos:.2f}")
-    
-    # Valor total das vendas
-    valor_total_vendas = sum(venda.valor_total for venda in vendas)
-    print(f"Valor total das vendas: R${valor_total_vendas:.2f}")
+    if not vendas:
+        print("Nenhuma venda registrada.")
+    else:
+        # Remédio mais vendido
+        produtos_vendidos = [produto for venda in vendas for produto in venda.produtos]
+        remedio_mais_vendido = max(produtos_vendidos, key=lambda produto: produtos_vendidos.count(produto))
+        quantidade_mais_vendido = produtos_vendidos.count(remedio_mais_vendido)
+        valor_total_mais_vendido = quantidade_mais_vendido * remedio_mais_vendido.preco
+        print(f"Remédio mais vendido: {remedio_mais_vendido.nome}")
+        print(f"Quantidade vendida: {quantidade_mais_vendido}")
+        print(f"Valor total: R${valor_total_mais_vendido:.2f}")
+        
+        # Quantidade de pessoas atendidas
+        quantidade_pessoas_atendidas = len(set(venda.cliente for venda in vendas))
+        print(f"Quantidade de pessoas atendidas: {quantidade_pessoas_atendidas}")
+        
+        # Número de remédios Quimioterápicos vendidos
+        quantidade_quimioterapicos = sum(1 for venda in vendas for produto in venda.produtos if isinstance(produto, MedicamentoQuimioterapico))
+        valor_total_quimioterapicos = sum(produto.preco for venda in vendas for produto in venda.produtos if isinstance(produto, MedicamentoQuimioterapico))
+        print(f"Número de remédios Quimioterápicos vendidos: {quantidade_quimioterapicos}")
+        print(f"Valor total dos Quimioterápicos: R${valor_total_quimioterapicos:.2f}")
+        
+        # Número de remédios Fitoterápicos vendidos
+        quantidade_fitoterapicos = sum(1 for venda in vendas for produto in venda.produtos if isinstance(produto, MedicamentoFitoterapico))
+        valor_total_fitoterapicos = sum(produto.preco for venda in vendas for produto in venda.produtos if isinstance(produto, MedicamentoFitoterapico))
+        print(f"Número de remédios Fitoterápicos vendidos: {quantidade_fitoterapicos}")
+        print(f"Valor total dos Fitoterápicos: R${valor_total_fitoterapicos:.2f}")
+        
+        # Valor total das vendas
+        valor_total_vendas = sum(venda.valor_total for venda in vendas)
+        print(f"Valor total das vendas: R${valor_total_vendas:.2f}")
+        print()
+
    
 
 
 # Inicialização de listas e dicionários
 clientes_cadastrados = [
-    Cliente("123.456.789-01", "João da Silva", "1990-05-15"),
-    Cliente("987.654.321-01", "Maria Souza", "1985-10-25"),
-    Cliente("456.789.123-01", "Pedro Oliveira", "2000-02-10")
+    Cliente("12345678901", "João da Silva", "1990-05-15"),
+    Cliente("98765432101", "Maria Souza", "1985-10-25"),
+    Cliente("45678912301", "Pedro Oliveira", "2000-02-10")
 ]
 
 medicamentos_quimioterapicos = [
@@ -323,6 +351,7 @@ while True:
     print("0 - Sair")
     
     opcao = input("Escolha uma opção: ")
+    print()
     
     if opcao == "1":
         cadastrar_cliente()

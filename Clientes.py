@@ -62,7 +62,7 @@ class Cliente:
         partes = data.split('-')
         return f"{partes[2]}/{partes[1]}/{partes[0]}"
     
-    def is_idoso(self):
+    def checar_idoso(self):
         """Verifica se o cliente é idoso (tem mais de 65 anos)."""
         data_nascimento = datetime.strptime(self._data_nascimento, '%Y-%m-%d')
         hoje = datetime.now()

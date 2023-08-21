@@ -62,7 +62,7 @@ class Venda:
 
     def calcular_desconto(self):
         """Calcula e aplica o desconto na venda."""
-        desconto_idoso = 0.20 if self._cliente.is_idoso() else 0.0
+        desconto_idoso = 0.20 if self._cliente.checar_idoso() else 0.0
         desconto_valor = 0.10 if self._valor_total > 150 else 0.0
 
         if desconto_idoso > desconto_valor:
