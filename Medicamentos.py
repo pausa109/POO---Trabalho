@@ -29,7 +29,13 @@ class MedicamentoQuimioterapico:
         self._preco = preco
 
     def __str__(self):
-        return f"Medicamento Quimioterápico: {self._nome} (Laboratório: {self._laboratorio})"
+        return (f"Medicamento Quimioterápico:\n"
+                f"  Nome: {self._nome}\n"
+                f"  Laboratório: {self._laboratorio}\n"
+                f"  Composto: {self._principal_composto}\n"
+                f"  Descrição: {self._descricao}\n"
+                f"  Necessita Receita: {self._necessita_receita}\n"
+                f"  Preço: R${self._preco:.2f}")
     
     @property
     def nome(self):
@@ -121,7 +127,12 @@ class MedicamentoFitoterapico:
         
 
     def __str__(self):
-        return f"Medicamento Fitoterápico: {self._nome} (Laboratório: {self._laboratorio})"
+        return (f"Medicamento Fitoterápico:\n"
+                f"  Nome: {self._nome}\n"
+                f"  Laboratório: {self._laboratorio}\n"
+                f"  Composto: {self._principal_composto}\n"
+                f"  Descrição: {self._descricao}\n"
+                f"  Preço: R${self._preco:.2f}")
     
     @property
     def nome(self):
